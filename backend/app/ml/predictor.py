@@ -20,7 +20,9 @@ from sqlalchemy.orm import Session
 
 from app.models.daily_entry import DailyEntry
 
-BINARY_TARGETS = ["gym_attended", "studied"]
+# "studied" retired 2026-09-07 (user doesn't study currently); actual_for
+# still understands it so historical prediction rows keep scoring.
+BINARY_TARGETS = ["gym_attended"]
 REGRESSION_TARGETS = ["sleep_duration", "mood", "productivity"]
 
 

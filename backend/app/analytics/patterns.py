@@ -110,12 +110,6 @@ def _correlation_insights(entries: list[DailyEntry]) -> list[dict]:
             "sleep", "energy",
         ),
         (
-            "screen_time_hours", "study_hours", "focus",
-            "Higher screen time tends to go with more study hours",
-            "Higher screen time tends to go with fewer study hours",
-            "screen time", "study hours",
-        ),
-        (
             "screen_time_hours", "productivity", "focus",
             "Higher screen time tends to go with higher productivity",
             "Higher screen time tends to go with lower productivity",

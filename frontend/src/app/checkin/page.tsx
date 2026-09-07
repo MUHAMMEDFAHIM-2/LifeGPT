@@ -187,21 +187,13 @@ export default function CheckinPage() {
               </div>
             </Section>
 
-            <Section title="Work & Study">
-              <div className="flex gap-3">
-                <NumberField
-                  label="Work"
-                  unit="h"
-                  value={form.work_hours}
-                  onChange={(v) => set("work_hours", v)}
-                />
-                <NumberField
-                  label="Study"
-                  unit="h"
-                  value={form.study_hours}
-                  onChange={(v) => set("study_hours", v)}
-                />
-              </div>
+            <Section title="Work">
+              <NumberField
+                label="Work"
+                unit="h"
+                value={form.work_hours}
+                onChange={(v) => set("work_hours", v)}
+              />
             </Section>
 
             <Section title="Exercise">
