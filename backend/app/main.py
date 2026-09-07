@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.analytics import router as analytics_router
 from app.api.entries import router as entries_router
+from app.api.predictions import router as predictions_router
 from app.database.db import Base, engine
 from app import models  # noqa: F401  (registers models with Base)
 
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(entries_router)
 app.include_router(analytics_router)
+app.include_router(predictions_router)
 
 
 @app.get("/health")

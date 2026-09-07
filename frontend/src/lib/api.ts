@@ -132,6 +132,31 @@ export function getPatterns(): Promise<PatternsResponse> {
   return request("/api/analytics/patterns");
 }
 
+export interface Prediction {
+  id: number;
+  target_date: string;
+  target: string;
+  kind: "binary" | "regression";
+  predicted_value: number;
+  confidence: number;
+  method: string;
+  days_of_data: number;
+  actual_value: number | null;
+  error: number | null;
+  correct: number | null;
+  evaluated_at: string | null;
+  created_at: string;
+}
+
+export function generatePredictions(targetDate?: string): Promise<Prediction[]> {
+  const q = targetDate ? `?target_date=${targetDate}` : "";
+  return request(`/api/predictions/generate${q}`, { method: "POST" });
+}
+
+export function getPredictions(date: string): Promise<Prediction[]> {
+  return request(`/api/predictions/${date}`);
+}
+
 export function getEntries(limit = 30): Promise<DailyEntry[]> {
   return request(`/api/entries?limit=${limit}`);
 }

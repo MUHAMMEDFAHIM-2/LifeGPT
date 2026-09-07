@@ -11,6 +11,7 @@ import {
 } from "@/components/checkin/inputs";
 import {
   createEntry,
+  generatePredictions,
   getEntry,
   updateEntry,
   type DailyEntry,
@@ -123,6 +124,9 @@ export default function CheckinPage() {
         setExists(true);
       }
       setMessage({ kind: "ok", text: exists ? "Entry updated." : "Logged. LifeGPT is watching." });
+      // Lock in tomorrow's predictions with the freshest data (best effort —
+      // fails silently if they're already evaluated).
+      generatePredictions().catch(() => {});
     } catch (err) {
       setMessage({
         kind: "error",

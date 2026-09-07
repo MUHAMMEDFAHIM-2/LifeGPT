@@ -188,6 +188,15 @@ export default function Home() {
             </span>
           </Link>
           <Link
+            href="/forecast"
+            className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
+          >
+            Life Forecast
+            <span className="block text-sm font-normal text-zinc-400">
+              What LifeGPT predicts for tomorrow
+            </span>
+          </Link>
+          <Link
             href="/patterns"
             className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
           >
