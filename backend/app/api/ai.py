@@ -3,10 +3,21 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ai.llm import LLMError
-from app.ai.service import generate_analysis, generate_roast
+from app.ai.service import (
+    ask_lifegpt,
+    generate_analysis,
+    generate_forecast_commentary,
+    generate_roast,
+)
 from app.database.db import get_db
 from app.models.ai_report import AIReport
-from app.schemas.ai_report import AIReportRead, RoastRequest
+from app.schemas.ai_report import (
+    AIReportRead,
+    ChatRequest,
+    ChatResponse,
+    CommentaryResponse,
+    RoastRequest,
+)
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -23,6 +34,27 @@ def create_analysis(db: Session = Depends(get_db)):
 def create_roast(payload: RoastRequest, db: Session = Depends(get_db)):
     try:
         return generate_roast(db, payload.intensity)
+    except LLMError as exc:
+        raise HTTPException(status_code=502, detail=str(exc))
+
+
+@router.post("/forecast-commentary", response_model=CommentaryResponse)
+def forecast_commentary(db: Session = Depends(get_db)):
+    try:
+        return CommentaryResponse(commentary=generate_forecast_commentary(db))
+    except LLMError as exc:
+        raise HTTPException(status_code=502, detail=str(exc))
+
+
+@router.post("/chat", response_model=ChatResponse)
+def chat(payload: ChatRequest, db: Session = Depends(get_db)):
+    try:
+        reply = ask_lifegpt(
+            db,
+            payload.message,
+            [t.model_dump() for t in payload.history],
+        )
+        return ChatResponse(reply=reply)
     except LLMError as exc:
         raise HTTPException(status_code=502, detail=str(exc))
 

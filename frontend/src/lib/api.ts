@@ -210,6 +210,25 @@ export function getReports(kind: string, limit = 5): Promise<AIReport[]> {
   return request(`/api/ai/reports?kind=${kind}&limit=${limit}`);
 }
 
+export interface ChatTurn {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export function getForecastCommentary(): Promise<{ commentary: string }> {
+  return request("/api/ai/forecast-commentary", { method: "POST" });
+}
+
+export function askLifeGPT(
+  message: string,
+  history: ChatTurn[],
+): Promise<{ reply: string }> {
+  return request("/api/ai/chat", {
+    method: "POST",
+    body: JSON.stringify({ message, history }),
+  });
+}
+
 export function getEntries(limit = 30): Promise<DailyEntry[]> {
   return request(`/api/entries?limit=${limit}`);
 }

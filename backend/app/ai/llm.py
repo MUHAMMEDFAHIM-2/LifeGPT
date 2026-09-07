@@ -18,6 +18,10 @@ class LLMError(Exception):
 class LLMClient(Protocol):
     def generate(self, system: str, prompt: str) -> str: ...
 
+    def chat(self, system: str, turns: list[dict]) -> str:
+        """turns: [{"role": "user"|"model", "text": str}, ...], last is user."""
+        ...
+
 
 class GeminiClient:
     BASE = "https://generativelanguage.googleapis.com/v1beta"
@@ -31,9 +35,14 @@ class GeminiClient:
         self.model = model
 
     def generate(self, system: str, prompt: str) -> str:
+        return self.chat(system, [{"role": "user", "text": prompt}])
+
+    def chat(self, system: str, turns: list[dict]) -> str:
         payload = {
             "system_instruction": {"parts": [{"text": system}]},
-            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "contents": [
+                {"role": t["role"], "parts": [{"text": t["text"]}]} for t in turns
+            ],
             "generationConfig": {"temperature": 0.9, "maxOutputTokens": 2048},
         }
         try:

@@ -6,6 +6,7 @@ from inventing anything beyond this block.
 """
 
 import json
+from datetime import date, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -14,6 +15,7 @@ from app.analytics.patterns import get_patterns
 from app.analytics.service import get_summary
 from app.ml.evaluation import get_accuracy
 from app.models.daily_entry import DailyEntry
+from app.models.prediction import Prediction
 
 
 def _recent_entries(db: Session, limit: int = 14) -> list[dict]:
@@ -45,6 +47,23 @@ def _recent_entries(db: Session, limit: int = 14) -> list[dict]:
     return days
 
 
+def _tomorrows_predictions(db: Session) -> list[dict]:
+    tomorrow = date.today() + timedelta(days=1)
+    rows = db.scalars(
+        select(Prediction).where(Prediction.target_date == tomorrow)
+    ).all()
+    return [
+        {
+            "target": p.target,
+            "kind": p.kind,
+            "predicted": p.predicted_value,
+            "confidence": p.confidence,
+            "based_on_days": p.days_of_data,
+        }
+        for p in rows
+    ]
+
+
 def build_life_context(db: Session) -> dict:
     summary = get_summary(db)
     patterns = get_patterns(db)
@@ -66,6 +85,8 @@ def build_life_context(db: Session) -> dict:
             "per_target": accuracy["per_target"],
         },
         "recent_days_newest_first": _recent_entries(db),
+        "tomorrows_predictions": _tomorrows_predictions(db),
+        "today_date": date.today().isoformat(),
     }
 
 

@@ -71,6 +71,51 @@ def _generate_and_store(
     return report
 
 
+FORECAST_PROMPT = """Write a short commentary (3-4 sentences, one paragraph) on \
+tomorrow's predictions in the data. Interpret what the numbers suggest, \
+with light wit — the tone of a forecaster who has seen this user's track \
+record. If confidence values are low or the data is thin, be upfront that \
+these are early guesses. Do not repeat every number; pick what matters.
+
+DATA:
+{context}"""
+
+CHAT_SYSTEM = SYSTEM_BASE + """
+
+You are in conversation mode. The user asks questions about their own \
+behaviour, habits, and predictions. Answer directly and concretely from \
+the DATA block, cite the specific numbers that support your answer, and \
+give a clear recommendation when asked for advice. Add a light touch of \
+dry humour where it fits. If the data cannot answer the question, say \
+exactly that and name what logging would unlock the answer. Keep replies \
+under 120 words unless the question genuinely needs more."""
+
+
+def generate_forecast_commentary(db: Session) -> str:
+    context = context_as_json(db)
+    return get_llm().generate(SYSTEM_BASE, FORECAST_PROMPT.format(context=context))
+
+
+def ask_lifegpt(db: Session, message: str, history: list[dict]) -> str:
+    """history: [{"role": "user"|"assistant", "content": str}] oldest first."""
+    context = context_as_json(db)
+    turns: list[dict] = [
+        {
+            "role": "user",
+            "text": f"DATA (my verified life data, current as of now):\n{context}",
+        },
+        {
+            "role": "model",
+            "text": "Understood. I'll answer questions about your life using only this data.",
+        },
+    ]
+    for h in history[-10:]:
+        role = "model" if h["role"] == "assistant" else "user"
+        turns.append({"role": role, "text": h["content"]})
+    turns.append({"role": "user", "text": message})
+    return get_llm().chat(CHAT_SYSTEM, turns)
+
+
 def generate_analysis(db: Session) -> AIReport:
     return _generate_and_store(db, "analysis", ANALYSIS_PROMPT)
 

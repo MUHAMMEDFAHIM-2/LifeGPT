@@ -197,6 +197,15 @@ export default function Home() {
             </span>
           </Link>
           <Link
+            href="/ask"
+            className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
+          >
+            Ask LifeGPT 💬
+            <span className="block text-sm font-normal text-zinc-400">
+              Chat with the AI that knows your data
+            </span>
+          </Link>
+          <Link
             href="/roast"
             className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
           >

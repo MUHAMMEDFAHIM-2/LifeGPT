@@ -17,3 +17,21 @@ class AIReportRead(BaseModel):
 
 class RoastRequest(BaseModel):
     intensity: Literal["light", "brutal", "nuclear"]
+
+
+class ChatTurn(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: list[ChatTurn] = []
+
+
+class ChatResponse(BaseModel):
+    reply: str
+
+
+class CommentaryResponse(BaseModel):
+    commentary: str

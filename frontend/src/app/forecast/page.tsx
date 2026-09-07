@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   generatePredictions,
+  getForecastCommentary,
   getPredictions,
   type Prediction,
 } from "@/lib/api";
@@ -56,6 +57,20 @@ function ConfidenceBar({ value }: { value: number }) {
 export default function ForecastPage() {
   const [predictions, setPredictions] = useState<Prediction[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [commentary, setCommentary] = useState<string | null>(null);
+  const [commentaryLoading, setCommentaryLoading] = useState(false);
+
+  async function fetchCommentary() {
+    setCommentaryLoading(true);
+    try {
+      const res = await getForecastCommentary();
+      setCommentary(res.commentary);
+    } catch {
+      setCommentary("LifeGPT is speechless right now. Try again in a moment.");
+    } finally {
+      setCommentaryLoading(false);
+    }
+  }
   // Locale-dependent text must not be server-rendered (hydration mismatch).
   const [dateLabel, setDateLabel] = useState("");
 
@@ -152,6 +167,27 @@ export default function ForecastPage() {
                 </div>
               </div>
             ))}
+          </section>
+        )}
+
+        {predictions && predictions.length > 0 && (
+          <section className="rounded-2xl bg-zinc-900 p-4 flex flex-col gap-3">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
+              LifeGPT&apos;s take
+            </h2>
+            {commentary ? (
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-200">
+                {commentary}
+              </p>
+            ) : (
+              <button
+                onClick={fetchCommentary}
+                disabled={commentaryLoading}
+                className="rounded-xl bg-zinc-800 py-2.5 text-sm font-medium text-zinc-200 transition active:scale-[0.98] disabled:opacity-50"
+              >
+                {commentaryLoading ? "Consulting the data…" : "Get commentary"}
+              </button>
+            )}
           </section>
         )}
 
