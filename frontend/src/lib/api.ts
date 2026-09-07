@@ -184,6 +184,32 @@ export function getComparisons(limit = 60): Promise<Prediction[]> {
   return request(`/api/predictions/compare?limit=${limit}`);
 }
 
+export interface AIReport {
+  id: number;
+  kind: "analysis" | "roast";
+  intensity: "light" | "brutal" | "nuclear" | null;
+  content: string;
+  days_of_data: number;
+  created_at: string;
+}
+
+export function generateAnalysis(): Promise<AIReport> {
+  return request("/api/ai/analysis", { method: "POST" });
+}
+
+export function generateRoast(
+  intensity: "light" | "brutal" | "nuclear",
+): Promise<AIReport> {
+  return request("/api/ai/roast", {
+    method: "POST",
+    body: JSON.stringify({ intensity }),
+  });
+}
+
+export function getReports(kind: string, limit = 5): Promise<AIReport[]> {
+  return request(`/api/ai/reports?kind=${kind}&limit=${limit}`);
+}
+
 export function getEntries(limit = 30): Promise<DailyEntry[]> {
   return request(`/api/entries?limit=${limit}`);
 }

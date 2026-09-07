@@ -197,6 +197,24 @@ export default function Home() {
             </span>
           </Link>
           <Link
+            href="/roast"
+            className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
+          >
+            Reality Check 🔥
+            <span className="block text-sm font-normal text-zinc-400">
+              Get roasted by your own data
+            </span>
+          </Link>
+          <Link
+            href="/analysis"
+            className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
+          >
+            Life Analysis
+            <span className="block text-sm font-normal text-zinc-400">
+              The serious weekly read
+            </span>
+          </Link>
+          <Link
             href="/reality"
             className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
           >

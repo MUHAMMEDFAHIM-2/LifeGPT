@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.ai import router as ai_router
 from app.api.analytics import router as analytics_router
 from app.api.entries import router as entries_router
 from app.api.predictions import router as predictions_router
@@ -23,6 +24,7 @@ app.add_middleware(
 app.include_router(entries_router)
 app.include_router(analytics_router)
 app.include_router(predictions_router)
+app.include_router(ai_router)
 
 
 @app.get("/health")
