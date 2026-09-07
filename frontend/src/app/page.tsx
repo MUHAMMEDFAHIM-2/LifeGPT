@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { InstallBanner } from "@/components/InstallBanner";
+import { NotificationBanner } from "@/components/NotificationBanner";
 import { StatTile } from "@/components/dashboard/StatTile";
 import {
   MoodProductivityChart,
@@ -83,6 +85,9 @@ export default function Home() {
         {!summary && !error && (
           <p className="py-16 text-center text-zinc-500">Loading…</p>
         )}
+
+        <InstallBanner />
+        <NotificationBanner />
 
         {summary && (
           <>

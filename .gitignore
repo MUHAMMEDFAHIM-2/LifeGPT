@@ -12,3 +12,4 @@ backend/.env
 
 # general
 .DS_Store
+backend/vapid_private.pem

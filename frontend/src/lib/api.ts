@@ -229,6 +229,17 @@ export function askLifeGPT(
   });
 }
 
+export function getVapidPublicKey(): Promise<{ key: string }> {
+  return request("/api/push/vapid-public-key");
+}
+
+export function subscribePush(sub: PushSubscriptionJSON): Promise<void> {
+  return request("/api/push/subscribe", {
+    method: "POST",
+    body: JSON.stringify(sub),
+  });
+}
+
 export function getEntries(limit = 30): Promise<DailyEntry[]> {
   return request(`/api/entries?limit=${limit}`);
 }
