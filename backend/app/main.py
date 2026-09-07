@@ -13,6 +13,8 @@ app = FastAPI(title="LifeGPT API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
+    # Also allow the frontend served over the home network (phone access).
+    allow_origin_regex=r"^http://(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}):3000$",
     allow_methods=["*"],
     allow_headers=["*"],
 )
