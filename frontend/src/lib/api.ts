@@ -94,6 +94,39 @@ export function getTrends(days = 14): Promise<TrendPoint[]> {
   return request(`/api/analytics/trends?days=${days}`);
 }
 
+export interface PatternInsight {
+  id: string;
+  category: string;
+  text: string;
+  confidence: "early signal" | "pattern";
+  evidence: Record<string, unknown>;
+}
+
+export interface WeekdayProfile {
+  weekday: string;
+  n: number;
+  avg_productivity: number | null;
+  avg_mood: number | null;
+  gym_rate: number | null;
+}
+
+export interface PatternsResponse {
+  maturity: {
+    phase: "collecting" | "learning" | "modeling";
+    label: string;
+    days_logged: number;
+    next_unlock: number | null;
+    description: string;
+  };
+  insights: PatternInsight[];
+  weekday_profile: WeekdayProfile[] | null;
+  note: string;
+}
+
+export function getPatterns(): Promise<PatternsResponse> {
+  return request("/api/analytics/patterns");
+}
+
 export function getEntries(limit = 30): Promise<DailyEntry[]> {
   return request(`/api/entries?limit=${limit}`);
 }

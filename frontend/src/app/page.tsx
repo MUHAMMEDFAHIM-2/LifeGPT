@@ -188,6 +188,15 @@ export default function Home() {
             </span>
           </Link>
           <Link
+            href="/patterns"
+            className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
+          >
+            Life Patterns
+            <span className="block text-sm font-normal text-zinc-400">
+              What your data says about you
+            </span>
+          </Link>
+          <Link
             href="/history"
             className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
           >

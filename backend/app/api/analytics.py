@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from app.analytics.patterns import get_patterns
 from app.analytics.service import get_summary, get_trends
 from app.database.db import get_db
 
@@ -10,6 +11,11 @@ router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 @router.get("/summary")
 def summary(db: Session = Depends(get_db)):
     return get_summary(db)
+
+
+@router.get("/patterns")
+def patterns(db: Session = Depends(get_db)):
+    return get_patterns(db)
 
 
 @router.get("/trends")
