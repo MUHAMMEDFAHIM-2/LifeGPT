@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
+from app.ml.evaluation import evaluate_pending, get_accuracy
 from app.ml.predictor import generate_predictions
 from app.models.prediction import Prediction
 from app.schemas.prediction import PredictionRead
@@ -70,6 +71,28 @@ def list_predictions(
 ):
     return db.scalars(
         select(Prediction)
+        .order_by(Prediction.target_date.desc(), Prediction.target)
+        .limit(limit)
+    ).all()
+
+
+@router.get("/accuracy")
+def accuracy(db: Session = Depends(get_db)):
+    """The AI performance report. Scores anything pending first."""
+    evaluate_pending(db)
+    return get_accuracy(db)
+
+
+@router.get("/compare", response_model=list[PredictionRead])
+def compare(
+    limit: int = Query(default=60, ge=1, le=500),
+    db: Session = Depends(get_db),
+):
+    """Evaluated predictions, newest first — the AI vs Reality feed."""
+    evaluate_pending(db)
+    return db.scalars(
+        select(Prediction)
+        .where(Prediction.evaluated_at.is_not(None))
         .order_by(Prediction.target_date.desc(), Prediction.target)
         .limit(limit)
     ).all()

@@ -157,6 +157,33 @@ export function getPredictions(date: string): Promise<Prediction[]> {
   return request(`/api/predictions/${date}`);
 }
 
+export interface TargetAccuracy {
+  target: string;
+  label: string;
+  kind: "binary" | "regression";
+  n: number;
+  hit_rate: number | null;
+  mae?: number | null;
+  tolerance?: number | null;
+}
+
+export interface AccuracyReport {
+  evaluated_predictions: number;
+  days_scored: number;
+  overall_accuracy: number | null;
+  verdict: string;
+  per_target: TargetAccuracy[];
+  note: string;
+}
+
+export function getAccuracy(): Promise<AccuracyReport> {
+  return request("/api/predictions/accuracy");
+}
+
+export function getComparisons(limit = 60): Promise<Prediction[]> {
+  return request(`/api/predictions/compare?limit=${limit}`);
+}
+
 export function getEntries(limit = 30): Promise<DailyEntry[]> {
   return request(`/api/entries?limit=${limit}`);
 }

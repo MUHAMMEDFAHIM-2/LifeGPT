@@ -197,6 +197,15 @@ export default function Home() {
             </span>
           </Link>
           <Link
+            href="/reality"
+            className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
+          >
+            AI vs Reality
+            <span className="block text-sm font-normal text-zinc-400">
+              How well does LifeGPT know you?
+            </span>
+          </Link>
+          <Link
             href="/patterns"
             className="rounded-2xl bg-zinc-900 p-4 font-semibold transition active:scale-[0.98]"
           >

@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
+from app.ml.evaluation import evaluate_for_date
 from app.models.daily_entry import DailyEntry
 from app.schemas.daily_entry import (
     DailyEntryCreate,
@@ -50,6 +51,7 @@ def create_entry(payload: DailyEntryCreate, db: Session = Depends(get_db)):
     db.add(entry)
     db.commit()
     db.refresh(entry)
+    evaluate_for_date(db, entry.date)  # score any predictions made for this day
     return entry
 
 
@@ -62,6 +64,7 @@ def update_entry(
         setattr(entry, field, value)
     db.commit()
     db.refresh(entry)
+    evaluate_for_date(db, entry.date)  # re-score: actuals follow reality
     return entry
 
 
