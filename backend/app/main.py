@@ -7,9 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.ai import router as ai_router
 from app.api.analytics import router as analytics_router
+from app.api.auth import router as auth_router
 from app.api.entries import router as entries_router
 from app.api.predictions import router as predictions_router
 from app.api.push import router as push_router
+from app.core.config import settings
 from app.database.db import Base, engine
 from app.services.push import reminder_tick
 from app import models  # noqa: F401  (registers models with Base)
@@ -30,22 +32,30 @@ async def _reminder_loop():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    task = asyncio.create_task(_reminder_loop())
+    task = None
+    if settings.reminder_mode != "external":
+        task = asyncio.create_task(_reminder_loop())
     yield
-    task.cancel()
+    if task:
+        task.cancel()
 
 
 app = FastAPI(title="LifeGPT API", lifespan=lifespan)
 
+_cors_origins = ["http://localhost:3000"]
+if settings.extra_cors_origins:
+    _cors_origins += [o.strip() for o in settings.extra_cors_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=_cors_origins,
     # Also allow the frontend served over the home network (phone access).
     allow_origin_regex=r"^http://(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}):3000$",
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
 app.include_router(entries_router)
 app.include_router(analytics_router)
 app.include_router(predictions_router)

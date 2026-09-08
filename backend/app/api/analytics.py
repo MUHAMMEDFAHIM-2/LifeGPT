@@ -3,9 +3,12 @@ from sqlalchemy.orm import Session
 
 from app.analytics.patterns import get_patterns
 from app.analytics.service import get_summary, get_trends
+from app.core.auth import require_auth
 from app.database.db import get_db
 
-router = APIRouter(prefix="/api/analytics", tags=["analytics"])
+router = APIRouter(
+    prefix="/api/analytics", tags=["analytics"], dependencies=[Depends(require_auth)]
+)
 
 
 @router.get("/summary")

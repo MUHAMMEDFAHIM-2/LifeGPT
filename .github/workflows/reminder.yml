@@ -1,0 +1,22 @@
+name: LifeGPT daily reminder
+
+# Fires the 9 PM check-in reminder once a day. Needed because the free
+# Render web service sleeps between requests — an in-process timer inside
+# a sleeping process never runs. This workflow's HTTP call both wakes the
+# backend and triggers the reminder in one step.
+#
+# 15:30 UTC = 21:00 IST (9 PM in India). If you're in a different
+# timezone, change the cron line below — cron time is always UTC.
+on:
+  schedule:
+    - cron: "30 15 * * *"
+  workflow_dispatch: {} # lets you trigger it manually from the Actions tab
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the reminder endpoint
+        run: |
+          curl -sf -X POST "${{ secrets.LIFEGPT_BACKEND_URL }}/api/push/send-reminder" \
+            -H "X-Cron-Secret: ${{ secrets.LIFEGPT_CRON_SECRET }}"

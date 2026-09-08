@@ -1,10 +1,26 @@
 // Talk to the API on whatever host served the page (localhost on the
-// laptop, the laptop's LAN IP when opened from the phone).
+// laptop, the laptop's LAN IP when opened from the phone, or the deployed
+// backend URL when NEXT_PUBLIC_API_URL is set for a cloud build).
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ??
   (typeof window !== "undefined"
     ? `http://${window.location.hostname}:8000`
     : "http://localhost:8000");
+
+const TOKEN_KEY = "lifegpt_token";
+
+export function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return window.localStorage.getItem(TOKEN_KEY);
+}
+
+export function setToken(token: string): void {
+  window.localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function clearToken(): void {
+  window.localStorage.removeItem(TOKEN_KEY);
+}
 
 export interface DailyEntry {
   id: number;
@@ -34,10 +50,24 @@ export type DailyEntryPayload = Omit<
 >;
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = getToken();
   const res = await fetch(`${API_BASE}${path}`, {
     ...init,
-    headers: { "Content-Type": "application/json", ...init?.headers },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...init?.headers,
+    },
   });
+  if (res.status === 401) {
+    // Auth is either unset (never happens) or the token is missing/expired.
+    // Bounce to the lock screen regardless of what the caller does with the
+    // error it's about to get — some callers (getEntry) swallow it.
+    clearToken();
+    if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
+  }
   if (!res.ok) {
     const body = await res.json().catch(() => null);
     throw new Error(body?.detail ?? `Request failed (${res.status})`);
@@ -227,6 +257,19 @@ export function askLifeGPT(
     method: "POST",
     body: JSON.stringify({ message, history }),
   });
+}
+
+export async function login(password: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password }),
+  });
+  if (!res.ok) {
+    throw new Error(res.status === 401 ? "Wrong password." : "Login failed.");
+  }
+  const { token } = await res.json();
+  setToken(token);
 }
 
 export function getVapidPublicKey(): Promise<{ key: string }> {

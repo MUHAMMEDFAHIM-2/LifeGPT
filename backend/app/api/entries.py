@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.auth import require_auth
 from app.database.db import get_db
 from app.ml.evaluation import evaluate_for_date
 from app.models.daily_entry import DailyEntry
@@ -13,7 +14,9 @@ from app.schemas.daily_entry import (
     DailyEntryUpdate,
 )
 
-router = APIRouter(prefix="/api/entries", tags=["entries"])
+router = APIRouter(
+    prefix="/api/entries", tags=["entries"], dependencies=[Depends(require_auth)]
+)
 
 
 def get_entry_or_404(db: Session, entry_date: date_type) -> DailyEntry:

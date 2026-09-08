@@ -5,13 +5,18 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.auth import require_auth
 from app.database.db import get_db
 from app.ml.evaluation import evaluate_pending, get_accuracy
 from app.ml.predictor import generate_predictions
 from app.models.prediction import Prediction
 from app.schemas.prediction import PredictionRead
 
-router = APIRouter(prefix="/api/predictions", tags=["predictions"])
+router = APIRouter(
+    prefix="/api/predictions",
+    tags=["predictions"],
+    dependencies=[Depends(require_auth)],
+)
 
 
 @router.post("/generate", response_model=list[PredictionRead])

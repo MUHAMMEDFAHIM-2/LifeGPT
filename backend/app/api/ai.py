@@ -9,6 +9,7 @@ from app.ai.service import (
     generate_forecast_commentary,
     generate_roast,
 )
+from app.core.auth import require_auth
 from app.database.db import get_db
 from app.models.ai_report import AIReport
 from app.schemas.ai_report import (
@@ -19,7 +20,7 @@ from app.schemas.ai_report import (
     RoastRequest,
 )
 
-router = APIRouter(prefix="/api/ai", tags=["ai"])
+router = APIRouter(prefix="/api/ai", tags=["ai"], dependencies=[Depends(require_auth)])
 
 
 @router.post("/analysis", response_model=AIReportRead)

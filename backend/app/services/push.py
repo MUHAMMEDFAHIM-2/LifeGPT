@@ -1,4 +1,16 @@
-"""Web Push sending + the daily 9 PM check-in reminder."""
+"""Web Push sending + the daily check-in reminder.
+
+Two ways the reminder fires, controlled by REMINDER_MODE:
+  "internal" (default, local/laptop dev) — reminder_tick() runs every
+    minute in-process and fires once at REMINDER_HOUR (server local time).
+  "external" (cloud) — the in-process loop is disabled (app/main.py skips
+    starting it); an external scheduler such as GitHub Actions calls
+    POST /api/push/send-reminder once a day instead. This avoids relying
+    on a free-tier server that sleeps between requests, and sidesteps its
+    clock possibly not being in your timezone.
+Both paths call the same send_reminder_if_needed() so the "don't nag if
+you already logged today" rule lives in exactly one place.
+"""
 
 import json
 import logging
@@ -18,6 +30,13 @@ log = logging.getLogger("lifegpt.push")
 _last_reminder_date: date | None = None
 
 
+def _vapid_key() -> str:
+    # Raw base64url key (env var) takes priority — cloud hosts don't give
+    # you a writable filesystem for secrets. Falls back to the local PEM
+    # file for laptop dev.
+    return settings.vapid_private_key or settings.vapid_private_key_file
+
+
 def send_to_all(db: Session, title: str, body: str, url: str = "/checkin") -> dict:
     subs = db.scalars(select(PushSubscription)).all()
     payload = json.dumps({"title": title, "body": body, "url": url})
@@ -30,7 +49,7 @@ def send_to_all(db: Session, title: str, body: str, url: str = "/checkin") -> di
                     "keys": {"p256dh": sub.p256dh, "auth": sub.auth},
                 },
                 data=payload,
-                vapid_private_key=settings.vapid_private_key_file,
+                vapid_private_key=_vapid_key(),
                 vapid_claims={"sub": f"mailto:{settings.vapid_claim_email}"},
             )
             sent += 1
@@ -45,9 +64,26 @@ def send_to_all(db: Session, title: str, body: str, url: str = "/checkin") -> di
     return {"sent": sent, "dropped": dropped, "total": len(subs)}
 
 
+def send_reminder_if_needed(db: Session) -> dict:
+    """The actual rule: nudge once, only if today has no entry yet."""
+    today = date.today()
+    already_logged = (
+        db.scalar(select(DailyEntry.id).where(DailyEntry.date == today)) is not None
+    )
+    if already_logged:
+        log.info("reminder skipped — today already logged")
+        return {"skipped": True, "reason": "already logged"}
+    result = send_to_all(
+        db,
+        "LifeGPT is waiting 👀",
+        "You haven't logged today. 60 seconds, that's all it takes.",
+    )
+    log.info("reminder sent: %s", result)
+    return {"skipped": False, **result}
+
+
 def reminder_tick() -> None:
-    """Called every minute. Sends the 9 PM reminder once per day,
-    and only if today's entry hasn't been logged yet."""
+    """Called every minute by the in-process loop (REMINDER_MODE=internal)."""
     global _last_reminder_date
     now = datetime.now()
     today = now.date()
@@ -57,18 +93,6 @@ def reminder_tick() -> None:
 
     db = SessionLocal()
     try:
-        already_logged = (
-            db.scalar(select(DailyEntry.id).where(DailyEntry.date == today))
-            is not None
-        )
-        if already_logged:
-            log.info("reminder skipped — today already logged")
-            return
-        result = send_to_all(
-            db,
-            "LifeGPT is waiting 👀",
-            "You haven't logged today. 60 seconds, that's all it takes.",
-        )
-        log.info("reminder sent: %s", result)
+        send_reminder_if_needed(db)
     finally:
         db.close()
