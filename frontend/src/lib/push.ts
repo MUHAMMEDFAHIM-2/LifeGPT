@@ -1,8 +1,16 @@
-function urlBase64ToUint8Array(base64: string): Uint8Array {
+function urlBase64ToUint8Array(base64: string): Uint8Array<ArrayBuffer> {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
   const base64Safe = (base64 + padding).replace(/-/g, "+").replace(/_/g, "/");
   const raw = atob(base64Safe);
-  return Uint8Array.from([...raw].map((c) => c.charCodeAt(0)));
+  // `new Uint8Array(length)` (unlike `.from()`) types as Uint8Array<ArrayBuffer>
+  // rather than the newer, wider Uint8Array<ArrayBufferLike> — the latter
+  // includes SharedArrayBuffer and isn't assignable to BufferSource under
+  // TS 5.7+'s stricter typed-array generics.
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) {
+    bytes[i] = raw.charCodeAt(i);
+  }
+  return bytes;
 }
 
 export function pushSupported(): boolean {
