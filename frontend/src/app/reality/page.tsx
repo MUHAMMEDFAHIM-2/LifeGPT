@@ -108,17 +108,22 @@ export default function RealityPage() {
                 {report.per_target.map((t) => (
                   <div
                     key={t.target}
-                    className="rounded-2xl bg-zinc-900 p-4 flex flex-col gap-0.5"
+                    className="rounded-2xl bg-zinc-900 p-4 flex flex-col items-center gap-2"
                   >
-                    <span className="text-xs text-zinc-500">
+                    <ProgressRing
+                      value={
+                        t.hit_rate !== null
+                          ? Math.round(t.hit_rate * 100)
+                          : null
+                      }
+                      size={88}
+                      stroke={8}
+                      valueClassName="text-lg font-bold text-white"
+                    />
+                    <span className="text-xs text-zinc-400 text-center">
                       {TARGET_META[t.target]?.icon} {t.label}
                     </span>
-                    <span className="text-xl font-semibold">
-                      {t.hit_rate !== null
-                        ? `${Math.round(t.hit_rate * 100)}%`
-                        : "—"}
-                    </span>
-                    <span className="text-[10px] text-zinc-600">
+                    <span className="text-[10px] text-zinc-600 text-center">
                       {t.kind === "regression" && t.mae !== null
                         ? `MAE ${t.mae}${t.target === "sleep_duration" ? "h" : ""} · ${t.n} scored`
                         : `${t.n} scored`}

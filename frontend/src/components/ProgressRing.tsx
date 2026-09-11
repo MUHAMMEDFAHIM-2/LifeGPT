@@ -3,12 +3,16 @@ export function ProgressRing({
   size = 160,
   stroke = 12,
   label,
+  valueClassName = "text-3xl font-bold text-white",
+  labelClassName = "text-[10px] uppercase tracking-wide text-zinc-500 text-center px-4",
 }: {
   /** 0-100, or null to show a placeholder ring. */
   value: number | null;
   size?: number;
   stroke?: number;
   label?: string;
+  valueClassName?: string;
+  labelClassName?: string;
 }) {
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -45,14 +49,10 @@ export function ProgressRing({
         )}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
-        <span className="text-3xl font-bold text-white">
+        <span className={valueClassName}>
           {value !== null ? `${value}%` : "—"}
         </span>
-        {label && (
-          <span className="text-[10px] uppercase tracking-wide text-zinc-500 text-center px-4">
-            {label}
-          </span>
-        )}
+        {label && <span className={labelClassName}>{label}</span>}
       </div>
     </div>
   );
