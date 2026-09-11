@@ -54,7 +54,7 @@ export default function HistoryPage() {
         {entries?.length === 0 && (
           <div className="py-16 text-center flex flex-col gap-3">
             <p className="text-zinc-400">No entries yet.</p>
-            <Link href="/checkin" className="text-violet-400 underline">
+            <Link href="/checkin" className="text-green-400 underline">
               Log your first day →
             </Link>
           </div>

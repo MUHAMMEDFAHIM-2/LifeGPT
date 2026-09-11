@@ -50,7 +50,7 @@ export function NotificationBanner() {
           </p>
           <button
             onClick={enable}
-            className="rounded-xl bg-violet-600 py-2.5 text-sm font-semibold transition active:scale-[0.98]"
+            className="rounded-xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] py-2.5 text-sm font-semibold transition active:scale-[0.98]"
           >
             Enable reminders
           </button>

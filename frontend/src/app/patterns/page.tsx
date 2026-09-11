@@ -39,7 +39,7 @@ function MaturityBanner({
       </div>
       <div className="h-1.5 rounded-full bg-zinc-800">
         <div
-          className="h-full rounded-full bg-violet-500 transition-all"
+          className="h-full rounded-full bg-green-500 transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -155,7 +155,7 @@ export default function PatternsPage() {
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide ${
                             ins.confidence === "pattern"
-                              ? "bg-violet-500/15 text-violet-300"
+                              ? "bg-green-500/15 text-green-300"
                               : "bg-amber-500/15 text-amber-300"
                           }`}
                         >

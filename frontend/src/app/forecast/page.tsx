@@ -43,7 +43,7 @@ function ConfidenceBar({ value }: { value: number }) {
     <div className="flex items-center gap-2">
       <div className="h-1 w-16 rounded-full bg-zinc-800">
         <div
-          className="h-full rounded-full bg-violet-500"
+          className="h-full rounded-full bg-green-500"
           style={{ width: `${Math.round(value * 100)}%` }}
         />
       </div>
@@ -134,7 +134,7 @@ export default function ForecastPage() {
                 <div className="flex flex-col items-end gap-1">
                   <span
                     className={`text-lg font-semibold ${
-                      p.predicted_value >= 0.5 ? "text-violet-300" : "text-zinc-400"
+                      p.predicted_value >= 0.5 ? "text-green-300" : "text-zinc-400"
                     }`}
                   >
                     {formatValue(p)}

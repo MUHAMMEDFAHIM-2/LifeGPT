@@ -49,7 +49,7 @@ export function InstallBanner() {
           if (outcome === "accepted") setInstalled(true);
           setDeferred(null);
         }}
-        className="shrink-0 rounded-xl bg-violet-600 px-4 py-2 text-sm font-semibold transition active:scale-[0.98]"
+        className="shrink-0 rounded-xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] px-4 py-2 text-sm font-semibold transition active:scale-[0.98]"
       >
         Install
       </button>

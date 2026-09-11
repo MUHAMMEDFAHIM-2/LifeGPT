@@ -101,7 +101,7 @@ export default function Home() {
                     <span className="text-xs text-zinc-500">Gym</span>
                     <span
                       className={`text-lg font-semibold ${
-                        today.gym_attended ? "text-[#0ca30c]" : "text-zinc-500"
+                        today.gym_attended ? "text-[#22c55e]" : "text-zinc-500"
                       }`}
                     >
                       {today.gym_attended ? "✓" : "—"}
@@ -112,10 +112,10 @@ export default function Home() {
             ) : (
               <Link
                 href="/checkin"
-                className="rounded-2xl bg-violet-600 p-5 font-semibold transition active:scale-[0.98]"
+                className="rounded-2xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] p-5 font-semibold transition active:scale-[0.98]"
               >
                 Log today
-                <span className="block text-sm font-normal text-violet-200">
+                <span className="block text-sm font-normal text-green-200">
                   You haven&apos;t checked in yet
                 </span>
               </Link>

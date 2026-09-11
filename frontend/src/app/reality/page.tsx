@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ProgressRing } from "@/components/ProgressRing";
 import {
   getAccuracy,
   getComparisons,
@@ -44,13 +45,11 @@ function AccuracyHero({ report }: { report: AccuracyReport }) {
       ? Math.round(report.overall_accuracy * 100)
       : null;
   return (
-    <section className="rounded-2xl bg-zinc-900 p-6 flex flex-col items-center gap-2 text-center">
+    <section className="rounded-2xl border border-green-500/10 bg-zinc-900 p-6 flex flex-col items-center gap-3 text-center">
       <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
         How well does LifeGPT know you?
       </h2>
-      <p className="text-5xl font-bold text-violet-300">
-        {pct !== null ? `${pct}%` : "—"}
-      </p>
+      <ProgressRing value={pct} label="Prediction Accuracy" />
       <p className="text-sm text-zinc-400">{report.verdict}</p>
       <p className="text-[11px] text-zinc-600">
         {report.evaluated_predictions} predictions scored across{" "}
@@ -168,7 +167,7 @@ export default function RealityPage() {
                         <span
                           className={
                             p.correct === 1
-                              ? "text-[#0ca30c]"
+                              ? "text-[#22c55e]"
                               : "text-red-400"
                           }
                         >

@@ -152,7 +152,7 @@ export default function CheckinPage() {
             value={date}
             max={todayISO()}
             onChange={(e) => setDate(e.target.value)}
-            className="rounded-xl bg-zinc-900 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-violet-500 [color-scheme:dark]"
+            className="rounded-xl bg-zinc-900 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-green-500 [color-scheme:dark]"
           />
         </header>
 
@@ -161,7 +161,7 @@ export default function CheckinPage() {
         ) : (
           <>
             {exists && (
-              <p className="rounded-xl bg-violet-500/10 px-4 py-2 text-sm text-violet-300">
+              <p className="rounded-xl bg-green-500/10 px-4 py-2 text-sm text-green-300">
                 Editing existing entry for {date}.
               </p>
             )}
@@ -268,7 +268,7 @@ export default function CheckinPage() {
                 placeholder="Anything significant today?"
                 rows={3}
                 maxLength={2000}
-                className="rounded-xl bg-zinc-800 px-3 py-2.5 text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500 resize-none"
+                className="rounded-xl bg-zinc-800 px-3 py-2.5 text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-green-500 resize-none"
               />
             </Section>
           </>
@@ -290,7 +290,7 @@ export default function CheckinPage() {
             <button
               onClick={save}
               disabled={saving || loading}
-              className="w-full rounded-2xl bg-violet-600 py-3.5 font-semibold text-white transition active:scale-[0.98] disabled:opacity-50"
+              className="w-full rounded-2xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] py-3.5 font-semibold text-white transition active:scale-[0.98] disabled:opacity-50"
             >
               {saving ? "Saving…" : exists ? "Update Entry" : "Save Entry"}
             </button>

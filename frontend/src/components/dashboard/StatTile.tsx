@@ -24,7 +24,7 @@ export function StatTile({
       </span>
       {showDelta && (
         <span
-          className={`text-xs ${good ? "text-[#0ca30c]" : "text-zinc-400"}`}
+          className={`text-xs ${good ? "text-[#22c55e]" : "text-zinc-400"}`}
         >
           {delta! > 0 ? "▲" : "▼"} {Math.abs(delta!)} vs last week
         </span>

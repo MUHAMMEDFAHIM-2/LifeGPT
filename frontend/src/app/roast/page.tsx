@@ -92,7 +92,7 @@ export default function RoastPage() {
         <button
           onClick={generate}
           disabled={generating || loading}
-          className="rounded-2xl bg-violet-600 py-3.5 font-semibold transition active:scale-[0.98] disabled:opacity-50"
+          className="rounded-2xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] py-3.5 font-semibold transition active:scale-[0.98] disabled:opacity-50"
         >
           {generating ? "Preparing the truth…" : "Roast Me"}
         </button>

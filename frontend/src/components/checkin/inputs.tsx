@@ -30,7 +30,7 @@ export function RatingSlider({
     <label className="flex flex-col gap-2">
       <span className="flex justify-between text-sm">
         <span className="text-zinc-300">{label}</span>
-        <span className="font-mono text-violet-400">{value}/10</span>
+        <span className="font-mono text-green-400">{value}/10</span>
       </span>
       <input
         type="range"
@@ -38,7 +38,7 @@ export function RatingSlider({
         max={10}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-violet-500"
+        className="w-full accent-green-500"
       />
     </label>
   );
@@ -74,7 +74,7 @@ export function NumberField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="—"
-        className="rounded-xl bg-zinc-800 px-3 py-2.5 text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500"
+        className="rounded-xl bg-zinc-800 px-3 py-2.5 text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-green-500"
       />
     </label>
   );
@@ -96,7 +96,7 @@ export function TimeField({
         type="time"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-xl bg-zinc-800 px-3 py-2.5 text-white outline-none focus:ring-2 focus:ring-violet-500 [color-scheme:dark]"
+        className="rounded-xl bg-zinc-800 px-3 py-2.5 text-white outline-none focus:ring-2 focus:ring-green-500 [color-scheme:dark]"
       />
     </label>
   );
@@ -120,7 +120,7 @@ export function Toggle({
       <span className="text-sm text-zinc-300">{label}</span>
       <span
         className={`relative h-7 w-12 rounded-full transition-colors ${
-          value ? "bg-violet-500" : "bg-zinc-700"
+          value ? "bg-green-500" : "bg-zinc-700"
         }`}
       >
         <span

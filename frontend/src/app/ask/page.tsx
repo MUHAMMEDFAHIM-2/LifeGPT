@@ -76,7 +76,7 @@ export default function AskPage() {
               key={i}
               className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 m.role === "user"
-                  ? "self-end bg-violet-600 text-white"
+                  ? "self-end bg-green-600 text-white"
                   : "self-start bg-zinc-900 text-zinc-200"
               }`}
             >
@@ -104,12 +104,12 @@ export default function AskPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your life…"
-            className="flex-1 rounded-2xl bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500"
+            className="flex-1 rounded-2xl bg-zinc-900 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-green-500"
           />
           <button
             type="submit"
             disabled={thinking || !input.trim()}
-            className="rounded-2xl bg-violet-600 px-5 font-semibold transition active:scale-[0.98] disabled:opacity-50"
+            className="rounded-2xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] px-5 font-semibold transition active:scale-[0.98] disabled:opacity-50"
           >
             ↑
           </button>

@@ -36,7 +36,7 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="rounded-2xl bg-zinc-900 px-4 py-3.5 text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-violet-500"
+          className="rounded-2xl bg-zinc-900 px-4 py-3.5 text-white placeholder-zinc-600 outline-none focus:ring-2 focus:ring-green-500"
         />
         {error && (
           <p className="rounded-xl bg-red-500/15 px-4 py-2 text-center text-sm text-red-300">
@@ -46,7 +46,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading || !password}
-          className="rounded-2xl bg-violet-600 py-3.5 font-semibold transition active:scale-[0.98] disabled:opacity-50"
+          className="rounded-2xl bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.35)] py-3.5 font-semibold transition active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? "Checking…" : "Unlock"}
         </button>
