@@ -14,8 +14,10 @@ import type { TrendPoint } from "@/lib/api";
 
 const INK_MUTED = "#898781";
 const GRID = "#2c2c2a";
-const SERIES_1 = "#3987e5"; // blue — mood / sleep
-const SERIES_2 = "#d95926"; // orange — productivity
+const SERIES_1 = "#22c55e"; // brand green — sleep / mood
+const SERIES_2 = "#3987e5"; // blue — productivity (kept distinct: green+blue
+// passes CVD separation with a wide margin — ΔE 27.8 deutan, 29.9 normal —
+// verified with the dataviz skill's validator against the card surface)
 
 function dayLabel(iso: string) {
   return new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, {

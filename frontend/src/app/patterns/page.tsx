@@ -87,7 +87,7 @@ function WeekdayChart({
         <Bar
           dataKey="productivity"
           name="Avg productivity"
-          fill="#3987e5"
+          fill="#22c55e"
           radius={[4, 4, 0, 0]}
           maxBarSize={22}
           isAnimationActive={false}
