@@ -47,6 +47,14 @@ def _recent_entries(db: Session, limit: int = 14) -> list[dict]:
     return days
 
 
+def _public_week_stats(stats: dict) -> dict:
+    """Study tracking is retired (the user doesn't study currently) — the
+    backend still computes total_study_hours for API back-compat, but it
+    must never reach the LLM or it starts commenting on a feature that no
+    longer exists."""
+    return {k: v for k, v in stats.items() if k != "total_study_hours"}
+
+
 def _tomorrows_predictions(db: Session) -> list[dict]:
     tomorrow = date.today() + timedelta(days=1)
     rows = db.scalars(
@@ -71,8 +79,8 @@ def build_life_context(db: Session) -> dict:
     return {
         "days_logged_total": summary["total_entries"],
         "data_maturity": patterns["maturity"],
-        "this_week": summary["week"],
-        "previous_week": summary["prev_week"],
+        "this_week": _public_week_stats(summary["week"]),
+        "previous_week": _public_week_stats(summary["prev_week"]),
         "week_over_week_deltas": summary["deltas"],
         "streaks": summary["streaks"],
         "detected_patterns": [
